@@ -198,16 +198,26 @@
         }
 
         function filterWords(code) {
-            const [length, firstVowel, secondVowel, shape] = code.split('').map(Number);
+            const [length, firstVowel, star, shape] = code.split('');
+            const lengthNum = parseInt(length);
+            const firstVowelNum = parseInt(firstVowel);
+            const shapeNum = parseInt(shape);
             
             const filteredWords = wordList.filter(word => {
-                if (word.length !== length) return false;
+                // Check length
+                if (word.length !== lengthNum) return false;
                 
+                // Get vowel positions
                 const vowelPositions = getVowelPositions(word);
-                if (vowelPositions[0] !== firstVowel) return false;
-                if (secondVowel > 0 && (!vowelPositions[1] || vowelPositions[1] !== secondVowel)) return false;
                 
-                return getLetterShape(word[0]) === shape;
+                // Check first vowel position
+                if (vowelPositions[0] !== firstVowelNum) return false;
+                
+                // If * is used, ensure there's only one vowel
+                if (star === '*' && vowelPositions.length !== 1) return false;
+                
+                // Check first letter shape
+                return getLetterShape(word[0]) === shapeNum;
             });
 
             displayFilteredWords(filteredWords);
