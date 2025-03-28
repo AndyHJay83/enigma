@@ -223,17 +223,18 @@
             `;
 
             document.querySelectorAll('.word').forEach(button => {
-                button.addEventListener('click', async function() {
+                button.addEventListener('click', function() {
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Send message to service worker to start cleanup
-                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage('cleanup');
-                    }
+                    // First open the new tab
+                    const newTab = window.open(searchUrl, '_blank');
                     
-                    // Navigate to Google Images
-                    window.location.replace(searchUrl);
+                    // Then clear and redirect current tab
+                    if (newTab) {
+                        document.body.style.display = 'none';
+                        window.location.replace('about:blank');
+                    }
                 });
             });
 
