@@ -217,18 +217,10 @@
             filteredWordsContainer.innerHTML = `
                 <div class="word-list">
                     ${words.map(word => 
-                        `<button class="word">${word}</button>`
+                        `<button class="word" onclick="window.location.href='https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch'">${word}</button>`
                     ).join('')}
                 </div>
             `;
-
-            document.querySelectorAll('.word').forEach(button => {
-                button.addEventListener('click', () => {
-                    const word = button.textContent;
-                    // Simple direct navigation to Google Images
-                    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
-                });
-            });
 
             filteredWordsContainer.style.display = 'block';
         }
