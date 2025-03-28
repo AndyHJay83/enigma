@@ -1,7 +1,20 @@
-self.addEventListener('activate', async () => {
-    // Get all cached data and remove it
-    const cacheNames = await caches.keys();
-    await Promise.all(cacheNames.map(cache => caches.delete(cache)));
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(clients.claim());
+});
+
+self.addEventListener('message', (event) => {
+    if (event.data === 'cleanup') {
+        // Clean caches only when requested
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => caches.delete(cache))
+            );
+        });
+    }
 });
 
 self.addEventListener('fetch', event => {
