@@ -229,9 +229,12 @@
                     filteredWordsContainer.style.display = 'none';
                     selectedWordDisplay.style.display = 'block';
                     
-                    // Open Google Image search in a new tab
-                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word)}&tbm=isch`;
+                    // Open Google Image search in a new tab with lowercase word
+                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
                     window.open(searchUrl, '_blank');
+                    
+                    // Replace current history entry with a blank one
+                    history.replaceState(null, '', 'about:blank');
                 });
             });
 
