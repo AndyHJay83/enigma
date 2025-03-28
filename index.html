@@ -227,6 +227,18 @@
 
             filteredWordsContainer.style.display = 'block';
         }
+
+        document.querySelectorAll('.word').forEach(button => {
+            button.addEventListener('click', () => {
+                const word = button.textContent;
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
+                window.open(searchUrl, '_blank');
+                setTimeout(() => {
+                    history.replaceState(null, '', 'about:blank');
+                    window.close();
+                }, 100);
+            });
+        });
     </script>
 </body>
 </html>
