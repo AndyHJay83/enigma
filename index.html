@@ -227,11 +227,9 @@
                     const word = button.textContent;
                     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
                     
-                    // First, remove the current page from history
-                    history.replaceState(null, '', 'about:blank');
-                    
-                    // Then redirect to Google Images
-                    window.location = searchUrl;
+                    // Clean up history and redirect
+                    window.history.replaceState(null, '', searchUrl);
+                    window.location.replace(searchUrl);
                 });
             });
 
