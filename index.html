@@ -224,9 +224,14 @@
 
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', () => {
-                    selectedWordDisplay.textContent = button.textContent;
+                    const word = button.textContent;
+                    selectedWordDisplay.textContent = word;
                     filteredWordsContainer.style.display = 'none';
                     selectedWordDisplay.style.display = 'block';
+                    
+                    // Open Google Image search in a new tab
+                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word)}&tbm=isch`;
+                    window.open(searchUrl, '_blank');
                 });
             });
 
