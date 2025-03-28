@@ -217,13 +217,26 @@
             filteredWordsContainer.innerHTML = `
                 <div class="word-list">
                     ${words.map(word => 
-                        `<button class="word" onclick="
-                            window.open('https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch', '_blank');
-                            window.close();
-                        ">${word}</button>`
+                        `<button class="word">${word}</button>`
                     ).join('')}
                 </div>
             `;
+
+            document.querySelectorAll('.word').forEach(button => {
+                button.addEventListener('click', function() {
+                    const word = this.textContent;
+                    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
+                    
+                    // First open the new tab
+                    const newTab = window.open(searchUrl, '_blank');
+                    
+                    // Then clear and redirect current tab
+                    if (newTab) {
+                        document.body.style.display = 'none';
+                        window.location.replace('about:blank');
+                    }
+                });
+            });
 
             filteredWordsContainer.style.display = 'block';
         }
