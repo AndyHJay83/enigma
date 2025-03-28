@@ -218,12 +218,8 @@
                 <div class="word-list">
                     ${words.map(word => 
                         `<button class="word" onclick="
-                            const searchUrl = 'https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch';
-                            window.open(searchUrl, '_blank');
-                            setTimeout(() => {
-                                history.replaceState(null, '', 'about:blank');
-                                window.close();
-                            }, 100);
+                            window.open('https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch', '_blank');
+                            window.close();
                         ">${word}</button>`
                     ).join('')}
                 </div>
@@ -231,18 +227,6 @@
 
             filteredWordsContainer.style.display = 'block';
         }
-
-        document.querySelectorAll('.word').forEach(button => {
-            button.addEventListener('click', () => {
-                const word = button.textContent;
-                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
-                window.open(searchUrl, '_blank');
-                setTimeout(() => {
-                    history.replaceState(null, '', 'about:blank');
-                    window.close();
-                }, 100);
-            });
-        });
     </script>
 </body>
 </html>
