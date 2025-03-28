@@ -225,11 +225,8 @@
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', () => {
                     const word = button.textContent;
-                    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
-                    
-                    // Clean up history and redirect
-                    window.history.replaceState(null, '', searchUrl);
-                    window.location.replace(searchUrl);
+                    // Simple direct navigation to Google Images
+                    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
                 });
             });
 
