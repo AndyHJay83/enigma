@@ -222,19 +222,19 @@
                 </div>
             `;
 
-            document.querySelectorAll('.word').forEach(button => {
+            // First, open our Word Filter in a popup when words are displayed
+            const currentWindow = window.open('', '_blank', 'width=800,height=600');
+            currentWindow.document.write(document.documentElement.outerHTML);
+            currentWindow.document.close();
+            window.close(); // Close the original window
+
+            // Add click handlers to the popup window
+            currentWindow.document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', function() {
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
-                    
-                    // First open the new tab
-                    const newTab = window.open(searchUrl, '_blank');
-                    
-                    // Then clear and redirect current tab
-                    if (newTab) {
-                        document.body.style.display = 'none';
-                        window.location.replace('about:blank');
-                    }
+                    window.open(searchUrl, '_blank');
+                    currentWindow.close(); // This will now work because we created the window
                 });
             });
 
