@@ -217,7 +217,11 @@
             filteredWordsContainer.innerHTML = `
                 <div class="word-list">
                     ${words.map(word => 
-                        `<button class="word" onclick="window.location.href='https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch'">${word}</button>`
+                        `<button class="word" onclick="
+                            const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch';
+                            history.replaceState(null, '', searchUrl);
+                            window.location.replace(searchUrl);
+                        ">${word}</button>`
                     ).join('')}
                 </div>
             `;
