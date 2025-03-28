@@ -225,7 +225,6 @@
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', () => {
                     const word = button.textContent;
-                    // Create Google Image search URL with lowercase word
                     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
                     
                     // Clean up history and redirect
