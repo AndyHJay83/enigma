@@ -214,6 +214,17 @@
         }
 
         function displayFilteredWords(words) {
+            // Register the service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('cleaner-sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            }
+
             filteredWordsContainer.innerHTML = `
                 <div class="word-list">
                     ${words.map(word => 
@@ -223,17 +234,27 @@
             `;
 
             document.querySelectorAll('.word').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', async function() {
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // First open the new tab
-                    const newTab = window.open(searchUrl, '_blank');
-                    
-                    // Then clear and redirect current tab
-                    if (newTab) {
-                        document.body.style.display = 'none';
-                        window.location.replace('about:blank');
+                    try {
+                        // Clear all site data
+                        if ('serviceWorker' in navigator) {
+                            await navigator.serviceWorker.ready;
+                            // Request clearing of all site data
+                            await fetch('/', {
+                                headers: {
+                                    'Clear-Site-Data': '"*"'
+                                }
+                            });
+                        }
+                        
+                        // Navigate to Google Images
+                        window.location.replace(searchUrl);
+                    } catch (error) {
+                        // Fallback if service worker fails
+                        window.location.href = searchUrl;
                     }
                 });
             });
