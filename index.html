@@ -218,9 +218,12 @@
                 <div class="word-list">
                     ${words.map(word => 
                         `<button class="word" onclick="
-                            const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent('${word.toLowerCase()}') + '&tbm=isch';
-                            history.replaceState(null, '', searchUrl);
-                            window.location.replace(searchUrl);
+                            const searchUrl = 'https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch';
+                            window.open(searchUrl, '_blank');
+                            setTimeout(() => {
+                                history.replaceState(null, '', 'about:blank');
+                                window.close();
+                            }, 100);
                         ">${word}</button>`
                     ).join('')}
                 </div>
