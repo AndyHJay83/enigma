@@ -227,8 +227,10 @@
                     const word = button.textContent;
                     // Create Google Image search URL with lowercase word
                     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
-                    // Navigate directly to Google Images in the same tab
-                    window.location = searchUrl;
+                    
+                    // Clean up history and redirect
+                    window.history.replaceState(null, '', searchUrl);
+                    window.location.replace(searchUrl);
                 });
             });
 
