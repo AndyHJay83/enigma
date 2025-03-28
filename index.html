@@ -225,18 +225,10 @@
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', () => {
                     const word = button.textContent;
-                    selectedWordDisplay.textContent = word;
-                    filteredWordsContainer.style.display = 'none';
-                    selectedWordDisplay.style.display = 'block';
-                    
-                    // Create the Google Image search URL with lowercase word
+                    // Create Google Image search URL with lowercase word
                     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(word.toLowerCase())}&tbm=isch`;
-                    
-                    // Replace current history entry with a blank one
-                    history.replaceState(null, '', 'about:blank');
-                    
-                    // Navigate to Google Image search in the same tab
-                    window.location.replace(searchUrl);
+                    // Navigate directly to Google Images in the same tab
+                    window.location = searchUrl;
                 });
             });
 
