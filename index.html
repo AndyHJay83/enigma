@@ -490,8 +490,8 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new tab
-                    window.open(searchUrl, '_blank');
+                    // Open the search in a new tab without back button
+                    window.open(searchUrl, '_blank', 'noopener,noreferrer,location=no,toolbar=no,menubar=no,status=no');
                     
                     // First redirect to google.co.uk
                     window.location.replace('https://www.google.co.uk');
