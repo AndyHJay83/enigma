@@ -22,28 +22,6 @@
             background-color: #fff;  /* Add background color to prevent any white flashing */
         }
 
-        .mode-switch {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 200px;
-            height: 200px;
-            z-index: 4;
-            opacity: 0.1;
-            border: 2px solid rgba(128, 128, 128, 0.8);  /* Default grey border for iOS */
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .mode-switch:hover {
-            opacity: 0.2;
-        }
-
-        .mode-switch.android {
-            border-color: rgba(255, 255, 255, 0.8);  /* White border for Android mode */
-        }
-
         .google-background {
             width: 100%;
             height: 100%;
@@ -205,15 +183,21 @@
             width: 50px;
             height: 50px;
             z-index: 4;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(128, 128, 128, 0.3);  /* Changed to semi-transparent grey */
+            border: 1px solid rgba(128, 128, 128, 0.3);  /* Changed to match background */
             border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: white;
+            color: rgba(128, 128, 128, 0.8);  /* Changed to grey */
+            transition: all 0.3s ease;
+        }
+
+        .settings-button:hover {
+            background: rgba(128, 128, 128, 0.4);  /* Slightly more visible on hover */
+            color: rgba(128, 128, 128, 0.9);
         }
 
         .settings-panel {
@@ -252,7 +236,6 @@
     </style>
 </head>
 <body>
-    <div class="mode-switch"></div>
     <div class="google-background"></div>
     <div class="search-trigger"></div>
     <div class="overlay"></div>
