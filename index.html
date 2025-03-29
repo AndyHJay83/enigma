@@ -490,8 +490,8 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new tab with minimal UI
-                    const newWindow = window.open(searchUrl, '_blank', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes');
+                    // Open the search in a new window with no navigation controls
+                    window.open(searchUrl, '_blank', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,navigation=no,resizable=no,fullscreen=yes');
                     
                     // Clear history and redirect to about:blank
                     window.location.replace('about:blank');
