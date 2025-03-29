@@ -490,13 +490,11 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // For mobile devices, simply redirect
-                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                        window.location.href = searchUrl;
-                    } else {
-                        // For desktop, try to clean up history
-                        window.location.replace(searchUrl);
-                    }
+                    // Open the search in a new tab
+                    window.open(searchUrl, '_blank');
+                    
+                    // Redirect the current tab to google.co.uk
+                    window.location.replace('https://www.google.co.uk');
                 });
             });
         }
