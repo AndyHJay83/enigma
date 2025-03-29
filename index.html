@@ -21,6 +21,16 @@
             position: relative;
         }
 
+        .mode-switch {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            z-index: 4;
+            opacity: 0;
+        }
+
         .google-background {
             width: 100%;
             height: 100%;
@@ -32,6 +42,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            transition: background-image 0.3s ease;
         }
 
         .overlay {
@@ -163,6 +174,7 @@
     </style>
 </head>
 <body>
+    <div class="mode-switch"></div>
     <div class="google-background"></div>
     <div class="search-trigger"></div>
     <div class="overlay"></div>
@@ -196,6 +208,35 @@
         const overlay = document.querySelector('.overlay');
         const searchTrigger = document.querySelector('.search-trigger');
         let wordList = [];
+
+        // Add double-tap detection
+        const modeSwitch = document.querySelector('.mode-switch');
+        const background = document.querySelector('.google-background');
+        let lastTap = 0;
+        let isAndroidMode = false;
+
+        modeSwitch.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 500 && tapLength > 0) {
+                // Double tap detected
+                isAndroidMode = !isAndroidMode;
+                background.style.backgroundImage = isAndroidMode ? 
+                    'url("google-backgroundANDROID.jpg")' : 
+                    'url("google-background.jpg")';
+                e.preventDefault();
+            }
+            lastTap = currentTime;
+        });
+
+        // Also add mouse double-click support for desktop testing
+        modeSwitch.addEventListener('dblclick', function() {
+            isAndroidMode = !isAndroidMode;
+            background.style.backgroundImage = isAndroidMode ? 
+                'url("google-backgroundANDROID.jpg")' : 
+                'url("google-background.jpg")';
+        });
 
         // Add click handler to search trigger
         searchTrigger.addEventListener('click', () => {
@@ -381,19 +422,23 @@
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
-                    // First, replace current history with google.co.uk
-                    history.replaceState(null, '', 'https://www.google.co.uk');
+                    // Clear the history stack by pushing and replacing states
+                    for (let i = 0; i < 10; i++) {
+                        history.pushState(null, '', 'https://www.google.co.uk');
+                    }
+                    history.replaceState(null, '', searchUrl);
                     
-                    // Then push a new state for the search URL
-                    history.pushState(null, '', searchUrl);
-                    
-                    // Prevent back navigation by catching popstate
+                    // Set up permanent redirect for any back button attempts
                     window.addEventListener('popstate', function() {
                         window.location.replace('https://www.google.co.uk');
-                    }, { once: true });
+                        // Prevent further back navigation
+                        for (let i = 0; i < 10; i++) {
+                            history.pushState(null, '', 'https://www.google.co.uk');
+                        }
+                    });
                     
-                    // Finally, navigate to the search URL
-                    window.location.href = searchUrl;
+                    // Navigate to the search URL
+                    window.location.replace(searchUrl);
                 });
             });
         }
