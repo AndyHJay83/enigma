@@ -323,13 +323,19 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // For mobile devices, simply redirect
-                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                        window.location.href = searchUrl;
-                    } else {
-                        // For desktop, try to clean up history
+                    // Clear the current history entry
+                    history.replaceState(null, '', searchUrl);
+                    
+                    // Clear any existing history entries
+                    history.pushState(null, '', searchUrl);
+                    
+                    // Redirect to the search URL
+                    window.location.replace(searchUrl);
+                    
+                    // Prevent the default browser back behavior
+                    window.onpopstate = function(event) {
                         window.location.replace(searchUrl);
-                    }
+                    };
                 });
             });
         }
