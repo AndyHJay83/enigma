@@ -495,13 +495,22 @@
                     
                     // Clear history and redirect
                     window.location.replace('about:blank');
-                    window.history.pushState(null, '', 'about:blank');
-                    window.history.replaceState(null, '', 'about:blank');
                     
-                    // Force reload about:blank to ensure history is cleared
+                    // Wait a moment before trying to clear history
                     setTimeout(() => {
+                        // Try multiple methods to clear history
+                        window.history.pushState(null, '', 'about:blank');
+                        window.history.replaceState(null, '', 'about:blank');
+                        
+                        // Force reload about:blank
                         window.location.reload(true);
-                    }, 100);
+                        
+                        // Try to clear history again after reload
+                        setTimeout(() => {
+                            window.history.pushState(null, '', 'about:blank');
+                            window.history.replaceState(null, '', 'about:blank');
+                        }, 100);
+                    }, 500);
                 });
             });
         }
