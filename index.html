@@ -259,7 +259,7 @@
         </div>
     </div>
     <div class="filtered-words"></div>
-    <div class="settings-button">⚙️</div>
+    <button class="settings-button">⚙️</button>
     <div class="settings-panel">
         <h3>Default Style</h3>
         <div class="settings-option">
@@ -284,21 +284,14 @@
         const overlay = document.querySelector('.overlay');
         const searchTrigger = document.querySelector('.search-trigger');
         let wordList = [];
-
-        // Add double-tap detection
-        const modeSwitch = document.querySelector('.mode-switch');
-        const background = document.querySelector('.google-background');
-        let lastTap = 0;
         let isAndroidMode = false;
 
         function updateAndroidMode(enabled) {
             isAndroidMode = enabled;
+            const background = document.querySelector('.google-background');
             background.style.backgroundImage = isAndroidMode ? 
                 'url("google-backgroundANDROID.jpg")' : 
                 'url("google-background.jpg")';
-            
-            // Update mode switch border color
-            modeSwitch.classList.toggle('android', isAndroidMode);
             
             // Adjust search trigger position for Android mode
             searchTrigger.style.top = isAndroidMode ? '195px' : '295px';
@@ -312,35 +305,6 @@
                 filteredWordsContainer.style.transform = 'translate(-50%, -50%)';
             }
         }
-
-        modeSwitch.addEventListener('touchend', function(e) {
-            // Check if touch is within the button bounds
-            const rect = modeSwitch.getBoundingClientRect();
-            const x = e.changedTouches[0].clientX;
-            const y = e.changedTouches[0].clientY;
-            
-            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTap;
-                
-                if (tapLength < 500 && tapLength > 0) {
-                    // Double tap detected within bounds
-                    updateAndroidMode(!isAndroidMode);
-                    e.preventDefault();
-                }
-                lastTap = currentTime;
-            }
-        });
-
-        // Also add mouse double-click support for desktop testing
-        modeSwitch.addEventListener('dblclick', function(e) {
-            // Check if click is within the button bounds
-            const rect = modeSwitch.getBoundingClientRect();
-            if (e.clientX >= rect.left && e.clientX <= rect.right && 
-                e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                updateAndroidMode(!isAndroidMode);
-            }
-        });
 
         // Add click handler to search trigger
         searchTrigger.addEventListener('click', () => {
@@ -446,36 +410,7 @@
         }
 
         function displayFilteredWords(words) {
-            // Analyze differences at each position
-            const length = words[0]?.length || 0;
-            const positionDifferences = [];
-            for (let pos = 0; pos < length; pos++) {
-                const lettersAtPosition = new Set(words.map(word => word[pos].toUpperCase()));
-                positionDifferences[pos] = lettersAtPosition.size;
-            }
-
-            // Find position with most differences
-            let maxDiffPosition = 0;
-            let maxDiffs = positionDifferences[0];
-            for (let i = 1; i < positionDifferences.length; i++) {
-                if (positionDifferences[i] > maxDiffs) {
-                    maxDiffs = positionDifferences[i];
-                    maxDiffPosition = i;
-                }
-            }
-
-            // Get unique letters at the lexicon position
-            const lexiconLetters = [...new Set(words.map(word => word[maxDiffPosition].toUpperCase()))].sort();
-
             filteredWordsContainer.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 24px; color: #FFB800; margin-bottom: 10px;">${maxDiffPosition + 1}</div>
-                    <div class="lexicon-letters">
-                        ${lexiconLetters.map(letter => 
-                            `<button class="lexicon-letter">${letter}</button>`
-                        ).join('')}
-                    </div>
-                </div>
                 <div class="word-list">
                     ${words.map(word => 
                         `<button class="word">${word}</button>`
@@ -483,56 +418,22 @@
                 </div>
             `;
 
-            // Add click handlers for lexicon letters
-            document.querySelectorAll('.lexicon-letter').forEach(button => {
-                button.addEventListener('click', () => {
-                    const selectedLetter = button.textContent;
-                    // Filter words that match the selected letter at the lexicon position
-                    const filteredByLetter = words.filter(word => 
-                        word[maxDiffPosition].toUpperCase() === selectedLetter
-                    );
-                    
-                    // Update the word list
-                    const wordList = document.querySelector('.word-list');
-                    wordList.innerHTML = filteredByLetter
-                        .map(word => `<button class="word">${word}</button>`)
-                        .join('');
-                        
-                    // Update visual state of buttons
-                    document.querySelectorAll('.lexicon-letter').forEach(btn => {
-                        if (btn === button) {
-                            btn.style.background = '#FFB800';
-                            btn.style.color = '#000';
-                        } else {
-                            btn.style.background = 'rgba(255, 184, 0, 0.2)';
-                            btn.style.color = '#FFB800';
-                        }
-                    });
-
-                    // Add click handlers to new word buttons
-                    addWordClickHandlers(filteredByLetter);
-                });
-            });
-
-            // Add click handlers to initial word buttons
-            addWordClickHandlers(words);
-
-            filteredWordsContainer.style.display = 'block';
-        }
-
-        function addWordClickHandlers(words) {
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', function() {
-                    const word = this.textContent.toLowerCase();
-                    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
+                    const word = this.textContent;
+                    const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new tab
-                    window.open(searchUrl, '_blank');
-                    
-                    // Redirect the current tab to google.co.uk
-                    window.location.replace('https://www.google.co.uk');
+                    // For mobile devices, simply redirect
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                        window.location.href = searchUrl;
+                    } else {
+                        // For desktop, try to clean up history
+                        window.location.replace(searchUrl);
+                    }
                 });
             });
+
+            filteredWordsContainer.style.display = 'block';
         }
 
         // Settings panel functionality
