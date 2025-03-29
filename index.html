@@ -24,20 +24,24 @@
 
         .mode-switch {
             position: absolute;
-            top: 10px;  /* Added some padding from top */
-            right: 10px;  /* Added some padding from right */
-            width: 200px;  /* Doubled from 100px */
-            height: 200px;  /* Doubled from 100px */
+            top: 10px;
+            right: 10px;
+            width: 200px;
+            height: 200px;
             z-index: 4;
-            opacity: 0.1;  /* Made slightly visible */
-            border: 2px solid rgba(255, 255, 255, 0.8);  /* Thicker, more visible white border */
-            border-radius: 20px;  /* Increased border radius */
+            opacity: 0.1;
+            border: 2px solid rgba(128, 128, 128, 0.8);  /* Default grey border for iOS */
+            border-radius: 20px;
             cursor: pointer;
-            transition: opacity 0.3s ease;  /* Smooth transition for hover */
+            transition: all 0.3s ease;
         }
 
         .mode-switch:hover {
-            opacity: 0.2;  /* More visible on hover */
+            opacity: 0.2;
+        }
+
+        .mode-switch.android {
+            border-color: rgba(255, 255, 255, 0.8);  /* White border for Android mode */
         }
 
         .google-background {
@@ -182,12 +186,12 @@
         }
 
         .search-trigger {
-            position: fixed;  /* Changed from absolute to fixed */
+            position: fixed;
             top: 295px;
             left: 50%;
             transform: translateX(-50%);
-            width: min(584px, 90vw);  /* Responsive width */
-            height: 46px;
+            width: min(584px, 90vw);
+            height: 92px;  /* Doubled from 46px */
             cursor: pointer;
             z-index: 2;
             opacity: 0;
@@ -242,34 +246,49 @@
                 'url("google-backgroundANDROID.jpg")' : 
                 'url("google-background.jpg")';
             
+            // Update mode switch border color
+            modeSwitch.classList.toggle('android', isAndroidMode);
+            
             // Adjust search trigger position for Android mode
             searchTrigger.style.top = isAndroidMode ? '195px' : '295px';
             
             // Adjust numpad container position for Android mode
             if (isAndroidMode) {
-                numpadContainer.style.transform = 'translate(-50%, -60%)';  // Moved down from -80%
-                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';  // Moved down from -80%
+                numpadContainer.style.transform = 'translate(-50%, -60%)';
+                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';
             } else {
-                numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
-                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';  // Default position
+                numpadContainer.style.transform = 'translate(-50%, -50%)';
+                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';
             }
         }
 
         modeSwitch.addEventListener('touchend', function(e) {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
+            // Check if touch is within the button bounds
+            const rect = modeSwitch.getBoundingClientRect();
+            const x = e.changedTouches[0].clientX;
+            const y = e.changedTouches[0].clientY;
             
-            if (tapLength < 500 && tapLength > 0) {
-                // Double tap detected
-                updateAndroidMode(!isAndroidMode);
-                e.preventDefault();
+            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 500 && tapLength > 0) {
+                    // Double tap detected within bounds
+                    updateAndroidMode(!isAndroidMode);
+                    e.preventDefault();
+                }
+                lastTap = currentTime;
             }
-            lastTap = currentTime;
         });
 
         // Also add mouse double-click support for desktop testing
-        modeSwitch.addEventListener('dblclick', function() {
-            updateAndroidMode(!isAndroidMode);
+        modeSwitch.addEventListener('dblclick', function(e) {
+            // Check if click is within the button bounds
+            const rect = modeSwitch.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                updateAndroidMode(!isAndroidMode);
+            }
         });
 
         // Add click handler to search trigger
