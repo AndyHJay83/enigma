@@ -314,13 +314,11 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // For mobile devices, simply redirect
-                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                        window.location.href = searchUrl;
-                    } else {
-                        // For desktop, try to clean up history
-                        window.location.replace(searchUrl);
-                    }
+                    // Replace current history entry with the search URL
+                    history.replaceState(null, '', searchUrl);
+                    
+                    // Redirect to the search URL
+                    window.location.replace(searchUrl);
                 });
             });
         }
