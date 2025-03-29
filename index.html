@@ -334,6 +334,11 @@
                         window.onpopstate = function(event) {
                             window.location.replace('https://www.google.co.uk');
                         };
+                        
+                        // Also handle the back button press directly
+                        window.addEventListener('popstate', function(event) {
+                            window.location.replace('https://www.google.co.uk');
+                        });
                     }, 100);
                 });
             });
