@@ -490,11 +490,13 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new window with a specific target name
-                    window.open(searchUrl, 'googleSearch');
-                    
-                    // Immediately redirect the current window to about:blank
+                    // First redirect the current window to about:blank
                     window.location.replace('about:blank');
+                    
+                    // Then open the search in a new window with specific features
+                    setTimeout(() => {
+                        window.open(searchUrl, '_blank', 'noopener,noreferrer,location=no,toolbar=no,menubar=no,status=no,scrollbars=yes');
+                    }, 100);
                 });
             });
         }
