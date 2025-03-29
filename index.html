@@ -19,6 +19,7 @@
             width: 100vw;
             overflow: hidden;
             position: relative;
+            background-color: #fff;  /* Add background color to prevent any white flashing */
         }
 
         .mode-switch {
@@ -35,14 +36,25 @@
             width: 100%;
             height: 100%;
             background-image: url('google-background.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: contain;  /* Changed from cover to contain */
+            background-position: top center;  /* Changed to top center */
             background-repeat: no-repeat;
-            position: absolute;
+            position: fixed;  /* Changed from absolute to fixed */
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 1;
             transition: background-image 0.3s ease;
+            display: flex;  /* Added flex display */
+            align-items: flex-start;  /* Align to top */
+            justify-content: center;  /* Center horizontally */
+        }
+
+        @media screen and (max-width: 768px) {
+            .google-background {
+                background-size: 100% auto;  /* Force full width on mobile */
+            }
         }
 
         .overlay {
@@ -161,15 +173,15 @@
         }
 
         .search-trigger {
-            position: absolute;
-            top: 295px;  /* Adjust based on the search bar position in the image */
+            position: fixed;  /* Changed from absolute to fixed */
+            top: 295px;
             left: 50%;
             transform: translateX(-50%);
-            width: 584px;  /* Match Google search bar width */
-            height: 46px;  /* Match Google search bar height */
+            width: min(584px, 90vw);  /* Responsive width */
+            height: 46px;
             cursor: pointer;
             z-index: 2;
-            opacity: 0;  /* Make it invisible but clickable */
+            opacity: 0;
         }
     </style>
 </head>
