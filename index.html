@@ -490,8 +490,18 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new window with no navigation controls
-                    window.open(searchUrl, '_blank', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,navigation=no,resizable=no,fullscreen=yes');
+                    // Open the search in a new window with minimal controls
+                    const newWindow = window.open(searchUrl, 'googleSearch', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=no,left=0,top=0');
+                    
+                    // Try to remove navigation controls
+                    if (newWindow) {
+                        try {
+                            newWindow.document.documentElement.style.overflow = 'hidden';
+                            newWindow.document.body.style.overflow = 'hidden';
+                        } catch (e) {
+                            // Cross-origin restrictions might prevent this
+                        }
+                    }
                     
                     // Clear history and redirect to about:blank
                     window.location.replace('about:blank');
