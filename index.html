@@ -381,11 +381,19 @@
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
-                    // Open the search in a new tab
-                    window.open(searchUrl, '_blank');
+                    // First, replace current history with google.co.uk
+                    history.replaceState(null, '', 'https://www.google.co.uk');
                     
-                    // Redirect the current tab to google.co.uk
-                    window.location.replace('https://www.google.co.uk');
+                    // Then push a new state for the search URL
+                    history.pushState(null, '', searchUrl);
+                    
+                    // Prevent back navigation by catching popstate
+                    window.addEventListener('popstate', function() {
+                        window.location.replace('https://www.google.co.uk');
+                    }, { once: true });
+                    
+                    // Finally, navigate to the search URL
+                    window.location.href = searchUrl;
                 });
             });
         }
