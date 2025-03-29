@@ -451,10 +451,26 @@
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
+                    // First, flood history with google.co.uk entries
+                    for (let i = 0; i < window.history.length + 10; i++) {
+                        history.pushState(null, '', 'https://www.google.co.uk');
+                    }
+                    
+                    // Set up permanent prevention of back navigation
+                    window.addEventListener('popstate', function preventBack() {
+                        window.location.replace('https://www.google.co.uk');
+                    });
+                    
+                    // Disable back button
+                    history.pushState(null, '', window.location.href);
+                    window.onpopstate = function() {
+                        history.pushState(null, '', window.location.href);
+                    };
+                    
                     // Open the search in a new tab
                     window.open(searchUrl, '_blank');
                     
-                    // Redirect the current tab to google.co.uk
+                    // Finally, redirect current tab to google.co.uk
                     window.location.replace('https://www.google.co.uk');
                 });
             });
