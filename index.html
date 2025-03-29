@@ -30,6 +30,9 @@
             height: 100px;
             z-index: 4;
             opacity: 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);  /* Added subtle white border */
+            border-radius: 10px;  /* Added rounded corners */
+            cursor: pointer;
         }
 
         .google-background {
@@ -234,12 +237,12 @@
                 'url("google-background.jpg")';
             
             // Adjust search trigger position for Android mode
-            searchTrigger.style.top = isAndroidMode ? '95px' : '295px';  // Reduced by 200px for Android
+            searchTrigger.style.top = isAndroidMode ? '195px' : '295px';  // Changed from 95px to 195px
             
             // Adjust numpad container position for Android mode
             if (isAndroidMode) {
-                numpadContainer.style.transform = 'translate(-50%, -100%)';  // Move up further for Android
-                filteredWordsContainer.style.transform = 'translate(-50%, -100%)';  // Move filtered words up too
+                numpadContainer.style.transform = 'translate(-50%, -80%)';  // Adjusted from -100% to -80%
+                filteredWordsContainer.style.transform = 'translate(-50%, -80%)';  // Adjusted from -100% to -80%
             } else {
                 numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
                 filteredWordsContainer.style.transform = 'translate(-50%, -50%)';  // Default position
