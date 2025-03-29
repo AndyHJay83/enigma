@@ -433,23 +433,11 @@
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
-                    // Clear the history stack by pushing and replacing states
-                    for (let i = 0; i < 10; i++) {
-                        history.pushState(null, '', 'https://www.google.co.uk');
-                    }
-                    history.replaceState(null, '', searchUrl);
+                    // Open the search in a new tab
+                    window.open(searchUrl, '_blank');
                     
-                    // Set up permanent redirect for any back button attempts
-                    window.addEventListener('popstate', function() {
-                        window.location.replace('https://www.google.co.uk');
-                        // Prevent further back navigation
-                        for (let i = 0; i < 10; i++) {
-                            history.pushState(null, '', 'https://www.google.co.uk');
-                        }
-                    });
-                    
-                    // Navigate to the search URL
-                    window.location.replace(searchUrl);
+                    // Redirect the current tab to google.co.uk
+                    window.location.replace('https://www.google.co.uk');
                 });
             });
         }
