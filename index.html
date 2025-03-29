@@ -130,15 +130,14 @@
             padding: 20px;
             border-radius: 15px;
             width: 80%;
-            max-width: 500px;
-            max-height: 70vh;
+            max-width: 500px;  /* Reduced from 600px */
+            max-height: 70vh;  /* Reduced from 80vh */
             overflow-y: auto;
-            z-index: 10;  /* Increased z-index */
+            z-index: 3;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 0.95em;
-            pointer-events: auto;  /* Ensure clicks are registered */
+            font-size: 0.95em;  /* Slightly reduced font size */
         }
 
         .word-list {
@@ -150,20 +149,13 @@
 
         .word {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 8px;
+            padding: 4px 8px;  /* Reduced padding */
             border-radius: 5px;
             cursor: pointer;
             border: none;
             color: white;
             font-family: inherit;
             font-size: inherit;
-            z-index: 11;  /* Increased z-index */
-            position: relative;  /* Ensure z-index works */
-            pointer-events: auto;  /* Ensure clicks are registered */
-        }
-
-        .word:hover {
-            background: rgba(255, 255, 255, 0.2);  /* Added hover effect */
         }
 
         .lexicon-letters {
@@ -178,13 +170,10 @@
             background: rgba(255, 184, 0, 0.2);
             color: #FFB800;
             border: 1px solid #FFB800;
-            padding: 4px 12px;
+            padding: 4px 12px;  /* Reduced padding */
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 16px;  /* Reduced from 18px */
             cursor: pointer;
-            z-index: 11;  /* Increased z-index */
-            position: relative;  /* Ensure z-index works */
-            pointer-events: auto;  /* Ensure clicks are registered */
         }
 
         .search-trigger {
@@ -244,24 +233,20 @@
 
         function updateAndroidMode(enabled) {
             isAndroidMode = enabled;
-            const androidBg = 'google-backgroundANDROID.jpg';
-            const iosBg = 'google-background.jpg';
-            
-            // Log the mode change for debugging
-            console.log('Switching to ' + (enabled ? 'Android' : 'iOS') + ' mode');
-            
-            background.style.backgroundImage = `url('${enabled ? androidBg : iosBg}')`;
+            background.style.backgroundImage = isAndroidMode ? 
+                'url("google-backgroundANDROID.jpg")' : 
+                'url("google-background.jpg")';
             
             // Adjust search trigger position for Android mode
             searchTrigger.style.top = isAndroidMode ? '195px' : '295px';
             
-            // Adjust container positions for Android mode
+            // Adjust numpad container position for Android mode
             if (isAndroidMode) {
-                numpadContainer.style.transform = 'translate(-50%, -60%)';
-                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';
+                numpadContainer.style.transform = 'translate(-50%, -60%)';  // Moved down from -80%
+                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';  // Moved down from -80%
             } else {
-                numpadContainer.style.transform = 'translate(-50%, -50%)';
-                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';
+                numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
+                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';  // Default position
             }
         }
 
@@ -271,17 +256,15 @@
             
             if (tapLength < 500 && tapLength > 0) {
                 // Double tap detected
-                e.preventDefault();  // Prevent any default behavior
                 updateAndroidMode(!isAndroidMode);
-                console.log('Double tap detected, switching to ' + (isAndroidMode ? 'Android' : 'iOS') + ' mode');
+                e.preventDefault();
             }
             lastTap = currentTime;
         });
 
-        modeSwitch.addEventListener('dblclick', function(e) {
-            e.preventDefault();  // Prevent any default behavior
+        // Also add mouse double-click support for desktop testing
+        modeSwitch.addEventListener('dblclick', function() {
             updateAndroidMode(!isAndroidMode);
-            console.log('Double click detected, switching to ' + (isAndroidMode ? 'Android' : 'iOS') + ' mode');
         });
 
         // Add click handler to search trigger
@@ -464,23 +447,15 @@
 
         function addWordClickHandlers(words) {
             document.querySelectorAll('.word').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();  // Prevent any default behavior
+                button.addEventListener('click', function() {
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
-                    try {
-                        // Open the search in a new tab first
-                        const newTab = window.open(searchUrl, '_blank');
-                        if (newTab) {
-                            // If new tab opened successfully, redirect current tab
-                            window.location.href = 'https://www.google.co.uk';
-                        }
-                    } catch (error) {
-                        console.error('Error opening window:', error);
-                        // Fallback: just redirect current tab
-                        window.location.href = searchUrl;
-                    }
+                    // Open the search in a new tab
+                    window.open(searchUrl, '_blank');
+                    
+                    // Redirect the current tab to google.co.uk
+                    window.location.replace('https://www.google.co.uk');
                 });
             });
         }
