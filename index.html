@@ -215,16 +215,30 @@
         let lastTap = 0;
         let isAndroidMode = false;
 
+        function updateAndroidMode(enabled) {
+            isAndroidMode = enabled;
+            background.style.backgroundImage = isAndroidMode ? 
+                'url("google-backgroundANDROID.jpg")' : 
+                'url("google-background.jpg")';
+            
+            // Adjust search trigger position for Android mode
+            searchTrigger.style.top = isAndroidMode ? '195px' : '295px';  // Reduced by 100px for Android
+            
+            // Adjust numpad container position for Android mode
+            if (isAndroidMode) {
+                numpadContainer.style.transform = 'translate(-50%, -80%)';  // Move up for Android
+            } else {
+                numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
+            }
+        }
+
         modeSwitch.addEventListener('touchend', function(e) {
             const currentTime = new Date().getTime();
             const tapLength = currentTime - lastTap;
             
             if (tapLength < 500 && tapLength > 0) {
                 // Double tap detected
-                isAndroidMode = !isAndroidMode;
-                background.style.backgroundImage = isAndroidMode ? 
-                    'url("google-backgroundANDROID.jpg")' : 
-                    'url("google-background.jpg")';
+                updateAndroidMode(!isAndroidMode);
                 e.preventDefault();
             }
             lastTap = currentTime;
@@ -232,10 +246,7 @@
 
         // Also add mouse double-click support for desktop testing
         modeSwitch.addEventListener('dblclick', function() {
-            isAndroidMode = !isAndroidMode;
-            background.style.backgroundImage = isAndroidMode ? 
-                'url("google-backgroundANDROID.jpg")' : 
-                'url("google-background.jpg")';
+            updateAndroidMode(!isAndroidMode);
         });
 
         // Add click handler to search trigger
