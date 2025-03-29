@@ -323,22 +323,18 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // First, redirect to the search URL
-                    window.location.href = searchUrl;
+                    // First, redirect to about:blank
+                    window.location.href = 'about:blank';
                     
-                    // After a delay, handle the history
+                    // After a brief delay, redirect to the search URL
                     setTimeout(() => {
-                        // Clear the current history entry
-                        history.replaceState(null, '', searchUrl);
+                        window.location.replace(searchUrl);
                         
-                        // Clear any existing history entries
-                        history.pushState(null, '', searchUrl);
-                        
-                        // Prevent the default browser back behavior
+                        // Prevent back navigation
                         window.onpopstate = function(event) {
                             window.location.replace(searchUrl);
                         };
-                    }, 5000); // 5 second delay
+                    }, 100);
                 });
             });
         }
