@@ -490,26 +490,11 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Open the search in a new window with minimal controls
-                    const newWindow = window.open(searchUrl, 'googleSearch', 'width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=no,left=0,top=0');
+                    // Open the search in a new window with a specific target name
+                    window.open(searchUrl, 'googleSearch');
                     
-                    // Try to remove navigation controls
-                    if (newWindow) {
-                        try {
-                            newWindow.document.documentElement.style.overflow = 'hidden';
-                            newWindow.document.body.style.overflow = 'hidden';
-                        } catch (e) {
-                            // Cross-origin restrictions might prevent this
-                        }
-                    }
-                    
-                    // Clear history and redirect to about:blank
+                    // Immediately redirect the current window to about:blank
                     window.location.replace('about:blank');
-                    
-                    // Force reload about:blank to ensure history is cleared
-                    setTimeout(() => {
-                        window.location.reload(true);
-                    }, 50);
                 });
             });
         }
