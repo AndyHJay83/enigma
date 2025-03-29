@@ -490,17 +490,13 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // Create a form and submit it to open in a new window
-                    const form = document.createElement('form');
-                    form.method = 'GET';
-                    form.action = searchUrl;
-                    form.target = '_blank';
-                    document.body.appendChild(form);
-                    form.submit();
-                    document.body.removeChild(form);
+                    // Open the search in a new window
+                    window.open(searchUrl, '_blank');
                     
-                    // Immediately redirect the current window to about:blank
-                    window.location.replace('about:blank');
+                    // Wait a moment before redirecting to ensure the new window opens
+                    setTimeout(() => {
+                        window.location.replace('about:blank');
+                    }, 100);
                 });
             });
         }
