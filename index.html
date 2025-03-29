@@ -198,10 +198,9 @@
         }
 
         function filterWords(code) {
-            const [length, firstVowel, secondVowel, shape] = code.split('');
+            const [length, firstVowel, star, shape] = code.split('');
             const lengthNum = parseInt(length);
             const firstVowelNum = parseInt(firstVowel);
-            const secondVowelNum = parseInt(secondVowel);
             const shapeNum = parseInt(shape);
             
             const filteredWords = wordList.filter(word => {
@@ -210,6 +209,16 @@
                 
                 // Get all vowel positions
                 const vowelPositions = getVowelPositions(word);
+                
+                // If * is used, ensure there's only one vowel in the specified position
+                if (star === '*') {
+                    return vowelPositions.length === 1 && 
+                           vowelPositions[0] === firstVowelNum &&
+                           getLetterShape(word[0]) === shapeNum;
+                }
+                
+                // For regular case (no *), check first and second vowel positions
+                const secondVowelNum = parseInt(star);
                 
                 // Check if we have at least 2 vowels
                 if (vowelPositions.length < 2) return false;
