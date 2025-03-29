@@ -493,10 +493,15 @@
                     // Open the search in a new window
                     window.open(searchUrl, '_blank');
                     
-                    // Wait longer before redirecting to ensure the new window opens
+                    // Clear history and redirect
+                    window.location.replace('about:blank');
+                    window.history.pushState(null, '', 'about:blank');
+                    window.history.replaceState(null, '', 'about:blank');
+                    
+                    // Force reload about:blank to ensure history is cleared
                     setTimeout(() => {
-                        window.location.replace('about:blank');
-                    }, 500);  // Increased from 100ms to 500ms
+                        window.location.reload(true);
+                    }, 100);
                 });
             });
         }
