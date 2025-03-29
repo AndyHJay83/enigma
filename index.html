@@ -194,11 +194,11 @@
         const filteredWordsContainer = document.querySelector('.filtered-words');
         const selectedWordDisplay = document.querySelector('.selected-word');
         const overlay = document.querySelector('.overlay');
-        const searchBar = document.querySelector('.search-bar');
+        const searchTrigger = document.querySelector('.search-trigger');
         let wordList = [];
 
-        // Add click handler to search bar
-        searchBar.addEventListener('click', () => {
+        // Add click handler to search trigger
+        searchTrigger.addEventListener('click', () => {
             numpadContainer.style.display = 'block';
             overlay.style.display = 'block';
         });
