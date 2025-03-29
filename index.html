@@ -244,9 +244,13 @@
 
         function updateAndroidMode(enabled) {
             isAndroidMode = enabled;
-            background.style.backgroundImage = isAndroidMode ? 
-                'url("google-backgroundANDROID.jpg")' : 
-                'url("google-background.jpg")';
+            const androidBg = 'google-backgroundANDROID.jpg';
+            const iosBg = 'google-background.jpg';
+            
+            // Log the mode change for debugging
+            console.log('Switching to ' + (enabled ? 'Android' : 'iOS') + ' mode');
+            
+            background.style.backgroundImage = `url('${enabled ? androidBg : iosBg}')`;
             
             // Adjust search trigger position for Android mode
             searchTrigger.style.top = isAndroidMode ? '195px' : '295px';
@@ -255,10 +259,6 @@
             if (isAndroidMode) {
                 numpadContainer.style.transform = 'translate(-50%, -60%)';
                 filteredWordsContainer.style.transform = 'translate(-50%, -40%)';
-                filteredWordsContainer.style.pointerEvents = 'auto';  // Ensure clicks work
-                document.querySelectorAll('.word, .lexicon-letter').forEach(el => {
-                    el.style.pointerEvents = 'auto';  // Ensure clicks work on individual elements
-                });
             } else {
                 numpadContainer.style.transform = 'translate(-50%, -50%)';
                 filteredWordsContainer.style.transform = 'translate(-50%, -50%)';
@@ -271,15 +271,17 @@
             
             if (tapLength < 500 && tapLength > 0) {
                 // Double tap detected
+                e.preventDefault();  // Prevent any default behavior
                 updateAndroidMode(!isAndroidMode);
-                e.preventDefault();
+                console.log('Double tap detected, switching to ' + (isAndroidMode ? 'Android' : 'iOS') + ' mode');
             }
             lastTap = currentTime;
         });
 
-        // Also add mouse double-click support for desktop testing
-        modeSwitch.addEventListener('dblclick', function() {
+        modeSwitch.addEventListener('dblclick', function(e) {
+            e.preventDefault();  // Prevent any default behavior
             updateAndroidMode(!isAndroidMode);
+            console.log('Double click detected, switching to ' + (isAndroidMode ? 'Android' : 'iOS') + ' mode');
         });
 
         // Add click handler to search trigger
@@ -462,31 +464,23 @@
 
         function addWordClickHandlers(words) {
             document.querySelectorAll('.word').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();  // Prevent any default behavior
                     const word = this.textContent.toLowerCase();
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word) + '&tbm=isch';
                     
-                    // First, flood history with google.co.uk entries
-                    for (let i = 0; i < window.history.length + 10; i++) {
-                        history.pushState(null, '', 'https://www.google.co.uk');
+                    try {
+                        // Open the search in a new tab first
+                        const newTab = window.open(searchUrl, '_blank');
+                        if (newTab) {
+                            // If new tab opened successfully, redirect current tab
+                            window.location.href = 'https://www.google.co.uk';
+                        }
+                    } catch (error) {
+                        console.error('Error opening window:', error);
+                        // Fallback: just redirect current tab
+                        window.location.href = searchUrl;
                     }
-                    
-                    // Set up permanent prevention of back navigation
-                    window.addEventListener('popstate', function preventBack() {
-                        window.location.replace('https://www.google.co.uk');
-                    });
-                    
-                    // Disable back button
-                    history.pushState(null, '', window.location.href);
-                    window.onpopstate = function() {
-                        history.pushState(null, '', window.location.href);
-                    };
-                    
-                    // Open the search in a new tab
-                    window.open(searchUrl, '_blank');
-                    
-                    // Finally, redirect current tab to google.co.uk
-                    window.location.replace('https://www.google.co.uk');
                 });
             });
         }
