@@ -222,13 +222,15 @@
                 'url("google-background.jpg")';
             
             // Adjust search trigger position for Android mode
-            searchTrigger.style.top = isAndroidMode ? '195px' : '295px';  // Reduced by 100px for Android
+            searchTrigger.style.top = isAndroidMode ? '95px' : '295px';  // Reduced by 200px for Android
             
             // Adjust numpad container position for Android mode
             if (isAndroidMode) {
-                numpadContainer.style.transform = 'translate(-50%, -80%)';  // Move up for Android
+                numpadContainer.style.transform = 'translate(-50%, -100%)';  // Move up further for Android
+                filteredWordsContainer.style.transform = 'translate(-50%, -100%)';  // Move filtered words up too
             } else {
                 numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
+                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';  // Default position
             }
         }
 
