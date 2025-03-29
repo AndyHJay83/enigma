@@ -323,12 +323,12 @@
                     const word = this.textContent;
                     const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(word.toLowerCase()) + '&tbm=isch';
                     
-                    // First, redirect to about:blank
-                    window.location.href = 'about:blank';
+                    // First redirect to the search URL
+                    window.location.href = searchUrl;
                     
-                    // After a brief delay, redirect to the search URL
+                    // After a brief delay, replace the current history entry
                     setTimeout(() => {
-                        window.location.replace(searchUrl);
+                        history.replaceState(null, '', searchUrl);
                         
                         // Prevent back navigation
                         window.onpopstate = function(event) {
