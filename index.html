@@ -193,7 +193,7 @@
         function getVowelPositions(word) {
             const vowels = ['A', 'E', 'I', 'O', 'U'];
             return [...word.toUpperCase()].map((letter, i) => 
-                vowels.includes(letter) ? i + 1 : null
+                vowels.includes(letter) ? i : null
             ).filter(pos => pos !== null);
         }
 
