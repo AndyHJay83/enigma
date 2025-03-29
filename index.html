@@ -410,7 +410,36 @@
         }
 
         function displayFilteredWords(words) {
+            // Analyze differences at each position
+            const length = words[0]?.length || 0;
+            const positionDifferences = [];
+            for (let pos = 0; pos < length; pos++) {
+                const lettersAtPosition = new Set(words.map(word => word[pos].toUpperCase()));
+                positionDifferences[pos] = lettersAtPosition.size;
+            }
+
+            // Find position with most differences
+            let maxDiffPosition = 0;
+            let maxDiffs = positionDifferences[0];
+            for (let i = 1; i < positionDifferences.length; i++) {
+                if (positionDifferences[i] > maxDiffs) {
+                    maxDiffs = positionDifferences[i];
+                    maxDiffPosition = i;
+                }
+            }
+
+            // Get unique letters at the lexicon position
+            const lexiconLetters = [...new Set(words.map(word => word[maxDiffPosition].toUpperCase()))].sort();
+
             filteredWordsContainer.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 24px; color: #FFB800; margin-bottom: 10px;">${maxDiffPosition + 1}</div>
+                    <div class="lexicon-letters">
+                        ${lexiconLetters.map(letter => 
+                            `<button class="lexicon-letter">${letter}</button>`
+                        ).join('')}
+                    </div>
+                </div>
                 <div class="word-list">
                     ${words.map(word => 
                         `<button class="word">${word}</button>`
@@ -418,6 +447,44 @@
                 </div>
             `;
 
+            // Add click handlers for lexicon letters
+            document.querySelectorAll('.lexicon-letter').forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedLetter = button.textContent;
+                    // Filter words that match the selected letter at the lexicon position
+                    const filteredByLetter = words.filter(word => 
+                        word[maxDiffPosition].toUpperCase() === selectedLetter
+                    );
+                    
+                    // Update the word list
+                    const wordList = document.querySelector('.word-list');
+                    wordList.innerHTML = filteredByLetter
+                        .map(word => `<button class="word">${word}</button>`)
+                        .join('');
+                        
+                    // Update visual state of buttons
+                    document.querySelectorAll('.lexicon-letter').forEach(btn => {
+                        if (btn === button) {
+                            btn.style.background = '#FFB800';
+                            btn.style.color = '#000';
+                        } else {
+                            btn.style.background = 'rgba(255, 184, 0, 0.2)';
+                            btn.style.color = '#FFB800';
+                        }
+                    });
+
+                    // Add click handlers to new word buttons
+                    addWordClickHandlers(filteredByLetter);
+                });
+            });
+
+            // Add click handlers to initial word buttons
+            addWordClickHandlers(words);
+
+            filteredWordsContainer.style.display = 'block';
+        }
+
+        function addWordClickHandlers(words) {
             document.querySelectorAll('.word').forEach(button => {
                 button.addEventListener('click', function() {
                     const word = this.textContent;
@@ -432,8 +499,6 @@
                     }
                 });
             });
-
-            filteredWordsContainer.style.display = 'block';
         }
 
         // Settings panel functionality
