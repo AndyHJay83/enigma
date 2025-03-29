@@ -24,15 +24,20 @@
 
         .mode-switch {
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
+            top: 10px;  /* Added some padding from top */
+            right: 10px;  /* Added some padding from right */
+            width: 200px;  /* Doubled from 100px */
+            height: 200px;  /* Doubled from 100px */
             z-index: 4;
-            opacity: 0;
-            border: 1px solid rgba(255, 255, 255, 0.3);  /* Added subtle white border */
-            border-radius: 10px;  /* Added rounded corners */
+            opacity: 0.1;  /* Made slightly visible */
+            border: 2px solid rgba(255, 255, 255, 0.8);  /* Thicker, more visible white border */
+            border-radius: 20px;  /* Increased border radius */
             cursor: pointer;
+            transition: opacity 0.3s ease;  /* Smooth transition for hover */
+        }
+
+        .mode-switch:hover {
+            opacity: 0.2;  /* More visible on hover */
         }
 
         .google-background {
