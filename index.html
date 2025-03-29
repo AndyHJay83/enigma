@@ -130,14 +130,15 @@
             padding: 20px;
             border-radius: 15px;
             width: 80%;
-            max-width: 500px;  /* Reduced from 600px */
-            max-height: 70vh;  /* Reduced from 80vh */
+            max-width: 500px;
+            max-height: 70vh;
             overflow-y: auto;
-            z-index: 3;
+            z-index: 10;  /* Increased z-index */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 0.95em;  /* Slightly reduced font size */
+            font-size: 0.95em;
+            pointer-events: auto;  /* Ensure clicks are registered */
         }
 
         .word-list {
@@ -149,13 +150,20 @@
 
         .word {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 8px;  /* Reduced padding */
+            padding: 4px 8px;
             border-radius: 5px;
             cursor: pointer;
             border: none;
             color: white;
             font-family: inherit;
             font-size: inherit;
+            z-index: 11;  /* Increased z-index */
+            position: relative;  /* Ensure z-index works */
+            pointer-events: auto;  /* Ensure clicks are registered */
+        }
+
+        .word:hover {
+            background: rgba(255, 255, 255, 0.2);  /* Added hover effect */
         }
 
         .lexicon-letters {
@@ -170,10 +178,13 @@
             background: rgba(255, 184, 0, 0.2);
             color: #FFB800;
             border: 1px solid #FFB800;
-            padding: 4px 12px;  /* Reduced padding */
+            padding: 4px 12px;
             border-radius: 5px;
-            font-size: 16px;  /* Reduced from 18px */
+            font-size: 16px;
             cursor: pointer;
+            z-index: 11;  /* Increased z-index */
+            position: relative;  /* Ensure z-index works */
+            pointer-events: auto;  /* Ensure clicks are registered */
         }
 
         .search-trigger {
@@ -240,13 +251,17 @@
             // Adjust search trigger position for Android mode
             searchTrigger.style.top = isAndroidMode ? '195px' : '295px';
             
-            // Adjust numpad container position for Android mode
+            // Adjust container positions for Android mode
             if (isAndroidMode) {
-                numpadContainer.style.transform = 'translate(-50%, -60%)';  // Moved down from -80%
-                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';  // Moved down from -80%
+                numpadContainer.style.transform = 'translate(-50%, -60%)';
+                filteredWordsContainer.style.transform = 'translate(-50%, -40%)';
+                filteredWordsContainer.style.pointerEvents = 'auto';  // Ensure clicks work
+                document.querySelectorAll('.word, .lexicon-letter').forEach(el => {
+                    el.style.pointerEvents = 'auto';  // Ensure clicks work on individual elements
+                });
             } else {
-                numpadContainer.style.transform = 'translate(-50%, -50%)';  // Default position
-                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';  // Default position
+                numpadContainer.style.transform = 'translate(-50%, -50%)';
+                filteredWordsContainer.style.transform = 'translate(-50%, -50%)';
             }
         }
 
