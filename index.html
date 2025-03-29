@@ -198,23 +198,33 @@
         }
 
         function filterWords(code) {
-            const [length, firstVowel, star, shape] = code.split('');
+            const [length, firstVowel, secondVowel, shape] = code.split('');
             const lengthNum = parseInt(length);
             const firstVowelNum = parseInt(firstVowel);
+            const secondVowelNum = parseInt(secondVowel);
             const shapeNum = parseInt(shape);
             
             const filteredWords = wordList.filter(word => {
                 // Check length
                 if (word.length !== lengthNum) return false;
                 
-                // Get vowel positions
+                // Get all vowel positions
                 const vowelPositions = getVowelPositions(word);
                 
-                // Check first vowel position
+                // Check if we have at least 2 vowels
+                if (vowelPositions.length < 2) return false;
+                
+                // Check if first vowel is in correct position
                 if (vowelPositions[0] !== firstVowelNum) return false;
                 
-                // If * is used, ensure there's only one vowel
-                if (star === '*' && vowelPositions.length !== 1) return false;
+                // Check if second vowel is in correct position
+                if (vowelPositions[1] !== secondVowelNum) return false;
+                
+                // Check that there are no vowels between first and second vowel
+                const hasVowelsBetween = vowelPositions.some(pos => 
+                    pos > firstVowelNum && pos < secondVowelNum
+                );
+                if (hasVowelsBetween) return false;
                 
                 // Check first letter shape
                 return getLetterShape(word[0]) === shapeNum;
