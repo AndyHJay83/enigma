@@ -493,22 +493,22 @@
                     // Open the search in a new window
                     window.open(searchUrl, '_blank');
                     
-                    // Clear history and redirect
-                    window.location.replace('about:blank');
+                    // Clear history and redirect to google.co.uk
+                    window.location.replace('https://www.google.co.uk');
                     
                     // Wait a moment before trying to clear history
                     setTimeout(() => {
                         // Try multiple methods to clear history
-                        window.history.pushState(null, '', 'about:blank');
-                        window.history.replaceState(null, '', 'about:blank');
+                        window.history.pushState(null, '', 'https://www.google.co.uk');
+                        window.history.replaceState(null, '', 'https://www.google.co.uk');
                         
-                        // Force reload about:blank
+                        // Force reload google.co.uk
                         window.location.reload(true);
                         
                         // Try to clear history again after reload
                         setTimeout(() => {
-                            window.history.pushState(null, '', 'about:blank');
-                            window.history.replaceState(null, '', 'about:blank');
+                            window.history.pushState(null, '', 'https://www.google.co.uk');
+                            window.history.replaceState(null, '', 'https://www.google.co.uk');
                         }, 100);
                     }, 500);
                 });
